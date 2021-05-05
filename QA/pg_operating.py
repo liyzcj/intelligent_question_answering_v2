@@ -1,18 +1,28 @@
 import os
-import time
-import psycopg2
-import numpy as np
 import sys
+import time
+
+import numpy as np
+import psycopg2
+
 # from src.config import DEFAULT_TABLE as PG_TABLE_NAME
-from QA.config import PG_HOST, PG_PORT, PG_USER, PG_PASSWORD, PG_DATABASE
+from QA.config import PG_DATABASE, PG_HOST, PG_PASSWORD, PG_PORT, PG_USER
+
 
 def connect_postgres_server():
-    try: 
-        conn = psycopg2.connect(host=PG_HOST, port=PG_PORT, user=PG_USER, password=PG_PASSWORD, database=PG_DATABASE)
+    try:
+        conn = psycopg2.connect(
+            host=PG_HOST,
+            port=PG_PORT,
+            user=PG_USER,
+            password=PG_PASSWORD,
+            database=PG_DATABASE,
+        )
         return conn
     except Exception as e:
-        print ("unable to connect to the database: ", e)
+        print("unable to connect to the database: ", e)
         sys.exit(2)
+
 
 # def check_table_exitsts(conn, cur):
 #     try:
@@ -59,7 +69,7 @@ def connect_postgres_server():
 
 # def insert_user_info(conn, cur, table_name, name, email, phone_num, company, title):
 #     try:
-#         sql = "insert into " + user_table_name + " values ('" + table_name + "', '" + name + "', '" + email + "', '" + phone_num + "', '" + company + "', '" + title + "', LOCALTIMESTAMP (0), TRUE);" 
+#         sql = "insert into " + user_table_name + " values ('" + table_name + "', '" + name + "', '" + email + "', '" + phone_num + "', '" + company + "', '" + title + "', LOCALTIMESTAMP (0), TRUE);"
 #         cur.execute(sql)
 #         conn.commit()
 #         return True
@@ -90,8 +100,12 @@ def connect_postgres_server():
 
 
 def create_pg_table(table_name, conn, cur):
-    try:       
-        sql = "CREATE TABLE if not exists " + table_name + " (ids bigint, question text, answer text);"
+    try:
+        sql = (
+            "CREATE TABLE if not exists "
+            + table_name
+            + " (ids bigint, question text, answer text);"
+        )
         cur.execute(sql)
         conn.commit()
         print("create postgres table!")
@@ -108,11 +122,11 @@ def create_pg_table(table_name, conn, cur):
 #         print("drop postgres table!")
 #     except Exception as e:
 #         print("drop postgres table faild: ", e)
-        
+
 
 def copy_data_to_pg(table_name, fname, conn, cur):
     # fname = 'data/' + table_name + '/temp.csv'
-    fname = os.path.join(os.getcwd(),fname)
+    fname = os.path.join(os.getcwd(), fname)
     sql = "copy " + table_name + " from '" + fname + "' with CSV delimiter '|';"
     print(sql)
     try:
@@ -122,6 +136,7 @@ def copy_data_to_pg(table_name, fname, conn, cur):
     except Exception as e:
         print("copy data to postgres faild: ", e)
         sys.exit(2)
+
 
 def build_pg_index(table_name, conn, cur):
     try:
@@ -136,28 +151,23 @@ def build_pg_index(table_name, conn, cur):
 def search_in_pg(conn, cur, result, table_name):
     # id_ = result[0].id
     sql = "select question from " + table_name + " where ids = " + str(result) + ";"
-    #print(sql)
+    # print(sql)
     try:
         cur.execute(sql)
-        rows=cur.fetchall()
+        rows = cur.fetchall()
         # print(rows)
         return rows
     except Exception as e:
         print("search faild: ", e)
+
 
 def get_result_answer(conn, cur, question, table_name):
     sql = "select answer from " + table_name + " where question = '" + question + "';"
-    #print(sql)
+    # print(sql)
     try:
         cur.execute(sql)
-        rows=cur.fetchall()
+        rows = cur.fetchall()
         # print(rows)
         return rows
     except Exception as e:
         print("search faild: ", e)
-
-
-
-
-
-
