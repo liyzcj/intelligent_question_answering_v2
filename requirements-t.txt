@@ -1,0 +1,8 @@
+pymilvus==0.2.14
+fastapi
+uvicorn
+numpy
+pandas
+psycopg2-binary
+bert-serving-client
+python-multipart
