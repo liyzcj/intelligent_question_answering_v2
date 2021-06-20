@@ -13,3 +13,5 @@ psycopg2-binary
 bert-serving-server
 bert-serving-client
 sendgrid
+grpcio==1.37.0
+grpcio-tools==1.37.0
