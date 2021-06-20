@@ -1,5 +1,7 @@
 tensorflow==1.14.0
 pymilvus==0.2.14
+grpcio==1.37.0
+grpcio-tools==1.37.0
 uvicorn
 fastapi
 numpy
@@ -8,10 +10,4 @@ psycopg2-binary
 bert-serving-server
 bert-serving-client
 python-multipart
-pandas
-psycopg2-binary
-bert-serving-server
-bert-serving-client
 sendgrid
-grpcio==1.37.0
-grpcio-tools==1.37.0
